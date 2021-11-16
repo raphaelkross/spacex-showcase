@@ -1,6 +1,18 @@
 import styles from './styles.module.css'
 
-const LaunchCard = (props) => {
+const LaunchCard = (props: {
+  data: {
+    mission_name: string;
+    rocket: {
+      rocket_name: string;
+    };
+    details: string;
+    links: {
+      article_link: string;
+      flickr_images: Array<string>;
+    }
+  };
+}) => {
   const {
     mission_name: missionName,
     rocket,

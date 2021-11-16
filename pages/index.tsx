@@ -6,17 +6,27 @@ import client from "../interfaces/apollo-client";
 import styles from '../styles/Home.module.css'
 import LaunchCard from '../components/LaunchCard';
 
-const Home: NextPage = (props) => {
+interface ILaunchResult {
+  mission_name: string;
+  rocket: {
+    rocket_name: string;
+  };
+};
+
+const Home: NextPage<{
+  launchesPast: Array<object>;
+  children?: React.ReactNode;
+}> = (props) => {
   const {launchesPast} = props;
   const [query, setQuery] = useState('');
 
-  const updateQuery = (e) => {
-    const text = e.target.value;
+  const updateQuery = (e: React.FormEvent<HTMLInputElement>) => {
+    const text = e.currentTarget.value;
 
     setQuery(text);
   }
 
-  const results = query !== '' ? launchesPast.filter((l) => {
+  const results = query !== '' ? launchesPast.filter((l: ILaunchResult) => {
     const q = query.toLowerCase();
 
     const {

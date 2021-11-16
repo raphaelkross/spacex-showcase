@@ -1,4 +1,5 @@
 import type { NextPage } from 'next'
+import { useState } from 'react';
 import Head from 'next/head'
 import { gql } from "@apollo/client";
 import client from "../interfaces/apollo-client";
@@ -7,6 +8,28 @@ import LaunchCard from '../components/LaunchCard';
 
 const Home: NextPage = (props) => {
   const {launchesPast} = props;
+  const [query, setQuery] = useState('');
+
+  const updateQuery = (e) => {
+    const text = e.target.value;
+
+    setQuery(text);
+  }
+
+  const results = query !== '' ? launchesPast.filter((l) => {
+    const q = query.toLowerCase();
+
+    const {
+      mission_name: missionName,
+      rocket,
+    } = l;
+
+    const {
+      rocket_name: rocketName
+    } = rocket;
+
+    return missionName.toLowerCase().includes(q) || rocketName.toLowerCase().includes(q);
+  }): launchesPast;
 
   return (
     <div className={styles.container}>
@@ -16,8 +39,13 @@ const Home: NextPage = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <div className={styles.searchBar}>
+        <input type="text" value={query} placeholder="Search mission..." onChange={updateQuery} />
+        <p>Showing {results.length} results.</p>
+      </div>
+
       <main className={styles.main}>
-        {launchesPast.map((l,i) => <LaunchCard key={i} data={l} />)}
+        {results.map((l,i) => <LaunchCard key={i} data={l} />)}
       </main>
     </div>
   )
